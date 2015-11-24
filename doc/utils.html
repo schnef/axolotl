@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module utils</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module utils</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#add_identity-3">add_identity/3</a></td><td>Helper function to add a identity to the trusted identities
+  store.</td></tr>
+<tr><td valign="top"><a href="#get_prekeys-1">get_prekeys/1</a></td><td>Returns a list with fresh prekey bundles that can be used by remote
+  peers to establish new sessions.</td></tr>
+<tr><td valign="top"><a href="#pkb2tuple-1">pkb2tuple/1</a></td><td>HELPER FUNCTION: Convert a the internally record used for prekey bundles to a tuple.</td></tr>
+<tr><td valign="top"><a href="#tuple2pkb-1">tuple2pkb/1</a></td><td>HELPER FUNCTION: Convert a tuple to the internal record used for prekey bundles.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="add_identity-3">add_identity/3</a></h3>
+<div class="spec">
+<p><tt>add_identity(Remote, Type, Binary) -&gt; Result</tt>
+<ul class="definitions"><li><tt>Remote = <a href="axolotl.html#type-remote">axolotl:remote()</a></tt></li><li><tt>Type = pkmsg | msg</tt></li><li><tt>Binary = binary()</tt></li><li><tt>Result = ok | {error, Reason::term()}</tt></li></ul></p>
+</div><p>Helper function to add a identity to the trusted identities
+  store. This function will process either a KeyExchange message or
+  PrekeyWhisper message, take out the required data and add the
+  identity to the trusted identity store. This is a helper function
+  that lacks lots of functionality and should be removed in the
+  fututure.
+ </p>
+<p><b><font color="red">To do</font></b><ul><li><font color="red"> REPLACE BY SOMETHING MORE APPROPRIATE.</font></li></ul></p>
+
+<h3 class="function"><a name="get_prekeys-1">get_prekeys/1</a></h3>
+<div class="spec">
+<p><tt>get_prekeys(N) -&gt; Result</tt>
+<ul class="definitions"><li><tt>N = pos_integer()</tt></li><li><tt>Result = tuple()</tt></li></ul></p>
+</div><p>Returns a list with fresh prekey bundles that can be used by remote
+  peers to establish new sessions.</p>
+
+<h3 class="function"><a name="pkb2tuple-1">pkb2tuple/1</a></h3>
+<div class="spec">
+<p><tt>pkb2tuple(Prekey_bundle::#prekey_bundle{}) -&gt; {Registration_id::<a href="axolotl.html#type-registration_id">axolotl:registration_id()</a>, Device_id::<a href="axolotl.html#type-device_id">axolotl:device_id()</a>, Identity_key_pub::<a href="axolotl.html#type-key">axolotl:key()</a>, Prekey_id::<a href="axolotl.html#type-prekey_id">axolotl:prekey_id()</a>, Prekey_pub::<a href="axolotl.html#type-key">axolotl:key()</a>, Signed_prekey_id::<a href="axolotl.html#type-prekey_id">axolotl:prekey_id()</a>, Signed_prekey_pub::<a href="axolotl.html#type-key">axolotl:key()</a>, Signed_prekey_sign::<a href="axolotl.html#type-sign">axolotl:sign()</a>, Ttl::<a href="axolotl.html#type-ttl">axolotl:ttl()</a>}</tt><br></p>
+</div><p>HELPER FUNCTION: Convert a the internally record used for prekey bundles to a tuple.</p>
+
+<h3 class="function"><a name="tuple2pkb-1">tuple2pkb/1</a></h3>
+<div class="spec">
+<p><tt>tuple2pkb(X1::{Registration_id::<a href="axolotl.html#type-registration_id">axolotl:registration_id()</a>, Device_id::<a href="axolotl.html#type-device_id">axolotl:device_id()</a>, Identity_key_pub::<a href="axolotl.html#type-key">axolotl:key()</a>, Prekey_id::<a href="axolotl.html#type-prekey_id">axolotl:prekey_id()</a>, Prekey_pub::<a href="axolotl.html#type-key">axolotl:key()</a>, Signed_prekey_id::<a href="axolotl.html#type-prekey_id">axolotl:prekey_id()</a>, Signed_prekey_pub::<a href="axolotl.html#type-key">axolotl:key()</a>, Signed_prekey_sign::<a href="axolotl.html#type-sign">axolotl:sign()</a>, Ttl::<a href="axolotl.html#type-ttl">axolotl:ttl()</a>}) -&gt; #prekey_bundle{}</tt><br></p>
+</div><p>HELPER FUNCTION: Convert a tuple to the internal record used for prekey bundles.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Nov 24 2015, 13:10:45.</i></p>
+</body>
+</html>

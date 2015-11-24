@@ -1,0 +1,241 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -smp enable -pz ebin -pz deps/curve25519/ebin -pz deps/gpb/ebin -pz deps/hkdf/ebin
+
+%% This is not code, this is a junkyard!!
+
+%% See https://github.com/jcomellas/getopt
+
+%% NB: epmd must be running prior to running this script. 
+
+-mode(compile).
+-export([connect_loop/1, send_loop/1, recv_loop/1, pks_loop/1]).
+
+-include("include/axolotl.hrl").
+
+main([My_id_str, Their_id_str]) ->
+    My_id = list_to_atom(My_id_str),
+    Their_id = list_to_atom(Their_id_str ++ "@debian"),
+    
+    %% Order is important!!: First register the short name based on our
+    %% local id so Erlang will use the proper database. Next, start
+    %% the Axolotl application before starting the processes for
+    %% receiving and sending data, after which the process monitoring
+    %% the connection is started.
+    net_kernel:start([My_id, shortnames]), 
+    application:start(axolotl),
+
+    Pid_recv = spawn(?MODULE, recv_loop, [Their_id]),
+    register(recv_loop, Pid_recv),
+    Pid_send = spawn(?MODULE, send_loop, [Their_id]),
+    register(send_loop, Pid_send),
+    Pid_connect = spawn(?MODULE, connect_loop, [Their_id]),
+    register(connect_loop, Pid_connect),
+
+    Pid_pks = spawn(?MODULE, pks_loop, [node()]),
+    register(pks_loop, Pid_pks),
+
+    cmd_loop(My_id_str ++ "> "),
+
+    application:stop(axolotl);
+main(_) ->
+    usage().
+    
+cmd_loop(Prompt) ->
+    case io:get_line(Prompt) of
+	eof ->	
+	    io:format("~nDone~n"),
+	    halt();
+	Msg ->	
+	    case string:strip(Msg, both, $\n) of
+		":c" ->
+		    connect_loop ! {cmd, connect};
+		":o" ->
+		    observer:start();
+		":d" ->
+		    debugger:start();
+		[] ->
+		    ok;
+		Text -> 
+		    send_loop ! {send, {plain, Text}}
+	    end,
+	    cmd_loop(Prompt)
+    end.
+	
+connect_loop(Their_id) -> 
+    net_kernel:monitor_nodes(true),
+    Connected = net_kernel:connect_node(Their_id),
+    send_loop ! {connected, Connected},
+    connect_loop(Their_id, Connected).
+
+connect_loop(Their_id, Connected) ->
+    Connected_ = receive
+		     {nodeup, Their_id} ->
+			 io:format("Peer ~p connected~n", [Their_id]),
+			 send_loop ! {connected, true},
+			 true;
+		     {nodedown, Their_id} ->
+			 io:format("Peer ~p disconnected~n", [Their_id]),
+			 send_loop ! {connected, false},
+			 false;
+		     {cmd, connect} when Connected ->
+			 {ok, Kem} = axolotl:connect(Their_id),
+			 send_loop ! {send, {kem, Kem}};
+		     Msg ->
+			 io:format(" ** Ignored Msg: ~p~n", [Msg]),
+			 Connected
+		 end,
+    connect_loop(Their_id, Connected_).
+
+send_loop(Their_id) ->
+    Queue = queue:new(),
+    send_loop(Their_id, false, Queue).
+
+send_loop(Their_id, Connected, Queue) -> 
+    receive
+	{connected, true} ->
+	    {Connected_, Queue_} = send_queue(Their_id, Queue),
+	    send_loop(Their_id, Connected_, Queue_);
+	{connected, Connected_} ->
+	    send_loop(Their_id, Connected_, Queue);
+	{send, {Type, Msg}} ->
+	    Msg_ = case Type of
+		       plain ->
+			   try
+			       {ok, Whisper_msg} = axolotl:send(Their_id, list_to_binary(Msg)),
+			       {msg, Whisper_msg}
+			   catch
+			      error:{badmatch, _} -> 
+				   io:format("Get prekey bundle and retry sending~n"),
+				   {ok, Prekey_whisper_msg} = make_prekey_msg(Their_id, Msg),
+				   {pkmsg, Prekey_whisper_msg}
+			   end;
+		       _ ->
+			   {Type, Msg}
+		   end,
+	    case Connected of
+		true ->
+		    send(Their_id, Msg_),
+		    io:format(" Msg sent     : ~p~n", [Msg_]),
+		    send_loop(Their_id, Connected, Queue);
+		false ->
+		    Queue_ = queue:in(Msg_, Queue),
+		    io:format(" Msg queued   : ~p~n", [Msg_]),
+		    send_loop(Their_id, Connected, Queue_)
+	    end;
+	Msg ->
+	    io:format(" ** Ignored Msg: ~p~n", [Msg]),
+	    send_loop(Their_id, Connected, Queue)
+    end.
+
+make_prekey_msg(Their_id, Msg) ->
+    {io_loop, pks@debian} ! {fetch, self(), Their_id},
+    receive
+	{prekey_bundle, Prekey_bundle_tuple} ->
+	    io:format("Make prekey msg from prekey bundle ~p and Msg ~p~n", [Prekey_bundle_tuple, Msg]),
+	    Prekey_bundle = utils:tuple2pkb(Prekey_bundle_tuple),
+	    axolotl:send(Their_id, Prekey_bundle, Msg);
+	{error, Reason} ->
+	    exit(Reason)
+    after
+	3600000 ->
+	    exit(prekey_timeout)
+    end.
+
+%% Returns connection status and the (partialy) emptied queue
+send_queue(Their_id, Queue) ->
+    receive
+	{connected, false} ->
+	    {false, Queue}
+    after
+	0 ->
+	    case queue:is_empty(Queue) of
+		false ->
+		    {{value, Msg}, Queue_} = queue:out(Queue),
+		    %% {recv_loop, Their_id} ! Msg,
+		    send(Their_id, Msg),
+		    io:format(" Msg unqueued : ~p~n", [Msg]),
+		    send_queue(Their_id, Queue_);
+		true ->
+		    {true, Queue}
+	    end
+    end.
+
+send(Their_id, Msg) ->
+    {recv_loop, Their_id} ! Msg.
+
+recv_loop(Their_id) ->
+    receive
+	{kem, Kem} ->
+	    case axolotl:connect(Their_id, Kem) of
+		{ok, Kem_resp} ->
+		    io:format("Pairing response with ~p~n", [Their_id]),
+		    send_loop ! {send, {kem, Kem_resp}};
+		ok ->
+		    io:format("Paired with ~p~n", [Their_id]);
+		{error, untrusted} ->
+		    io:format("Untrusted remote peer ~p~n", [Their_id]),
+		    case string:strip(io:get_line("Do you trust that party? (y/n*) "), both, $\n) of
+			Ans when Ans =:= "y" orelse Ans =:= "Y" ->
+			    ok = utils:add_identity(Their_id, kem, Kem),
+			    case axolotl:connect(Their_id, Kem) of
+				{ok, Kem_resp} ->
+				    io:format("Pairing response with ~p~n", [Their_id]),
+				    send_loop ! {send, {kem, Kem_resp}};
+				ok ->
+				    io:format("Paired with ~p~n", [Their_id]);
+				_ ->
+				    io:format("Ignoring messages from ~p~n", [Their_id])
+			    end
+		    end;	
+		Reason ->
+		    io:format("Pairing failed with ~p~n", [Reason])
+	    end;
+	{pkmsg = Type, Binary} ->
+	    case axolotl:recv(Their_id, Type, Binary) of
+		{ok, Msg} ->
+		    io:format("Received msg: ~p: ~p~n", [Type, binary_to_list(Msg)]);
+		{error, untrusted} ->
+		    io:format("Untrusted remote peer ~p~n", [Their_id]),
+		    case string:strip(io:get_line("Do you trust that party? (y/n*) "), both, $\n) of
+			Ans when Ans =:= "y" orelse Ans =:= "Y" ->
+			    ok = utils:add_identity(Their_id, pkmsg, Binary),
+			    {ok, Msg} = axolotl:recv(Their_id, Type, Binary),
+			    io:format("Received msg: ~p: ~p~n", [Type, binary_to_list(Msg)]);
+			_ ->
+			    io:format("Ignoring messages from ~p~n", [Their_id])
+		    end
+	    end;
+	{Type, Binary} when Type =:= msg orelse Type =:= pkmsg ->
+	    {ok, Msg} = axolotl:recv(Their_id, Type, Binary),
+	    io:format("Received msg: ~p: ~p~n", [Type, binary_to_list(Msg)]);
+	Msg ->
+	    io:format("Received msg: ~p~n", [Msg])
+    end,
+    recv_loop(Their_id).
+
+pks_loop(My_id) ->
+    case net_kernel:connect_node(pks@debian) of
+	true ->
+	    {io_loop, pks@debian} ! {hello, self(), My_id};
+	false ->
+	    ok;
+	ignored ->
+	    exit(epmd_not_started)
+    end,
+    receive
+	{prekeys, generate} ->
+	    io:format("I must generate!!~n"),
+	    Prekeys = utils:get_prekeys(10),
+	    {io_loop, pks@debian} ! {upload, My_id, Prekeys}
+    after 
+	60000 ->
+	    ok
+    end,
+    pks_loop(My_id).
+
+    
+
+usage() ->
+    io:format("peer <my id> <their id>~n"),
+    halt(1).

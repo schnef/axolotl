@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module axolotl</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module axolotl</h1>
+<ul class="index"><li><a href="#types">Data Types</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="types">Data Types</a></h2>
+
+<h3 class="typedecl"><a name="type-remote">remote()</a></h3>
+<p><tt>remote() = term()</tt></p>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#connect-1">connect/1</a></td><td>Initiate session to a remote party.</td></tr>
+<tr><td valign="top"><a href="#connect-2">connect/2</a></td><td>Complete session initialization.</td></tr>
+<tr><td valign="top"><a href="#recv-3">recv/3</a></td><td>Receive a encrypted message from a remote peer and decrypt
+  it.</td></tr>
+<tr><td valign="top"><a href="#send-2">send/2</a></td><td>Send a message to the remote peer for a existing session.</td></tr>
+<tr><td valign="top"><a href="#send-3">send/3</a></td><td>Send a message to a remote peer as a prekey whisper message and
+  also initiate a new session with the remote peer.</td></tr>
+<tr><td valign="top"><a href="#ttl-0">ttl/0</a></td><td>Return the current time in the same form as the time to live.</td></tr>
+<tr><td valign="top"><a href="#ttl-1">ttl/1</a></td><td>Calculate the maximum time to live value.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="connect-1">connect/1</a></h3>
+<div class="spec">
+<p><tt>connect(Remote) -&gt; Result</tt>
+<ul class="definitions"><li><tt>Remote = <a href="#type-remote">remote()</a></tt></li><li><tt>Result = {ok, iodata()} | {error, Reason}</tt></li><li><tt>Reason = {already_paired, Remote}</tt></li></ul></p>
+</div><p>Initiate session to a remote party. This function returns a
+  key exchange message which should be send to the remote peer. The
+  remote peer now should respond and return a matching key exchange
+  message which should be handed to connect/2. Calling this function
+  for a already existing session will return the error
+  already_paired.</p>
+<p><b>See also:</b> <a href="axolotl.html#connect-2">axolotl:connect/2</a>.</p>
+<p><b><font color="red">To do</font></b><ul><li><font color="red"> in specs, make message structures more explicit with version
+  fields, Mac etc.</font></li></ul></p>
+
+<h3 class="function"><a name="connect-2">connect/2</a></h3>
+<div class="spec">
+<p><tt>connect(Remote, Key_exchg_msg) -&gt; Result</tt>
+<ul class="definitions"><li><tt>Remote = <a href="#type-remote">remote()</a></tt></li><li><tt>Key_exchg_msg = iodata()</tt></li><li><tt>Result = {ok, Key_exchg_msg} | ok | {error, Reason}</tt></li><li><tt>Reason = untrusted | not_found | {already_paired, Remote}</tt></li></ul></p>
+</div><p>Complete session initialization. The remote peer returns a
+  matching key exchange message on receipt of our initial key
+  exchange message. The remote's key exchange message is matched
+  first to make sure it is in response of our's after which the key
+  material included by the remote peer in the message and a session
+  is installed. If a matching key exchange message is not found, the
+  function returns the not_found error. If a session is already in
+  place for the remote peer, the already_paired error is returned.
+ </p>
+<p><b><font color="red">To do</font></b><ul><li><font color="red"> Do someting with current version and maximum supported
+  version like upgrading the current version to the maximum version
+  both parties support. It is unclear from the reference
+  implementation how this is suppposed to work.</font></li></ul></p>
+
+<h3 class="function"><a name="recv-3">recv/3</a></h3>
+<div class="spec">
+<p><tt>recv(Remote, Type, Blob) -&gt; Result</tt>
+<ul class="definitions"><li><tt>Remote = <a href="#type-remote">remote()</a></tt></li><li><tt>Type = pkmsg | msg</tt></li><li><tt>Blob = binary()</tt></li><li><tt>Result = {ok, Msg} | {error, Reason}</tt></li><li><tt>Reason = illegal_msg | untrusted</tt></li><li><tt>Msg = iodata()</tt></li></ul></p>
+</div><p>Receive a encrypted message from a remote peer and decrypt
+  it. The received message can either be a whisper message (msg) when a
+  session has been established previously, or it should eb a prekey
+  whisper message (pkmsg) if there is not yet a session in place. Receiving a
+  prekey whisper messgae for a alredy established session should be
+  alright and the embedded whisper message should be decrypted
+  properly with the other data being discarded.
+ </p>
+<p><b><font color="red">To do</font></b><ul><li><font color="red"> POTENTIAL INCOMPATIBILITY: Check prekey whisper message
+  handling for old sessions. In libaxolotl-java the embeeded message
+  in PrekeyWhisper messages for exitsing sessions are processed as
+  normal WhisperMessgaes. The way PrekeyWhisper messages are handled
+  in libaxolotl-java differs between version 2 and 3. In Version 3,
+  if a session is available, the embeded message is processed. In
+  version 2, if a session is available and the prekey is not in
+  store, a new session is started. So, if for version 2, a prekey is
+  in store, a new session will be started even if a session was
+  already in place!</font></li></ul></p>
+
+<h3 class="function"><a name="send-2">send/2</a></h3>
+<div class="spec">
+<p><tt>send(Remote, Msg) -&gt; Result</tt>
+<ul class="definitions"><li><tt>Remote = <a href="#type-remote">remote()</a></tt></li><li><tt>Msg = iodata() | list()</tt></li><li><tt>Result = {ok, Whisper_msg} | {error, Reason}</tt></li><li><tt>Whisper_msg = binary()</tt></li><li><tt>Reason = term()</tt></li></ul></p>
+</div><p>Send a message to the remote peer for a existing session. The
+  message is encrypted and a encoded Whispermessage is returned. When
+  there is no session available for this remote peer, an axception is
+  genereated with the value no_session, which can be the trigger to
+  fetch a prekey bundle for the remote peer and resend the message as
+  a prekey whisper message.</p>
+
+<h3 class="function"><a name="send-3">send/3</a></h3>
+<div class="spec">
+<p><tt>send(Remote, Prekey_bundle, Msg) -&gt; Result</tt>
+<ul class="definitions"><li><tt>Remote = <a href="#type-remote">remote()</a></tt></li><li><tt>Prekey_bundle = #prekey_bundle{}</tt></li><li><tt>Msg = iodata() | list()</tt></li><li><tt>Result = {ok, Prekey_whisper_msg} | {error, Reason}</tt></li><li><tt>Prekey_whisper_msg = binary()</tt></li><li><tt>Reason = term()</tt></li></ul></p>
+</div><p>Send a message to a remote peer as a prekey whisper message and
+  also initiate a new session with the remote peer. This function is
+  used to initiate a asynchroneous sessuion with a remote peer by
+  using a prekey bundle from the remote peer to create the session at
+  this side of the connection. On receipt of the prekey whisper
+  session, the remote side will establish it's part of the session.
+ </p>
+<p><b><font color="red">To do</font></b><ul><li><font color="red"> POTENTIAL INCOMPATIBILITY: In libaxolotl-java, a new session
+  is started (session is overwritten) if the session is already
+  available. In this implementation, an already started error is
+  being returned, which seems to be more correct. The session could
+  still have unprocessed messages (in transit).</font></li></ul></p>
+
+<h3 class="function"><a name="ttl-0">ttl/0</a></h3>
+<div class="spec">
+<p><tt>ttl() -&gt; <a href="erlang.html#type-timestamp">erlang:timestamp()</a></tt><br></p>
+</div><p>Return the current time in the same form as the time to live.</p>
+<p><b>See also:</b> <a href="axolotl.html#ttl-1">axolotl:ttl/1</a>.</p>
+
+<h3 class="function"><a name="ttl-1">ttl/1</a></h3>
+<div class="spec">
+<p><tt>ttl(TTL::integer()) -&gt; <a href="erlang.html#type-timestamp">erlang:timestamp()</a></tt><br></p>
+</div><p>Calculate the maximum time to live value. The argument passed
+  in is the period to live as a number of seconds, starting now.</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Nov 24 2015, 13:10:45.</i></p>
+</body>
+</html>

@@ -1,0 +1,16 @@
+• http://www.forbes.com/sites/andygreenberg/2011/11/28/twitter-acquires-moxiemarlinspikes-encryption-startup-whisper-systems/
+• https://github.com/trevp/axolotl/wiki
+• http://nacl.cr.yp.to/
+• https://threema.ch/press-files/cryptography_whitepaper.pdf
+• https://www.os3.nl/_media/2013-2014/courses/ssn/projects/threema_report.pdf
+• https://news.ycombinator.com/item?id=6913456
+• http://unhandledexpression.com/2013/12/17/telegram-stand-back-we-know-maths/
+• http://thoughtcrime.org/blog/telegram-crypto-challenge/
+• https://telegram.org/blog/crowdsourcing-a-more-secure-future
+• http://www.cypherpunks.ca/~iang/pubs/mpotr.pdf
+• https://whispersystems.org/blog/private-groups/
+• https://github.com/cryptocat/cryptocat/wiki/Multiparty-Protocol-Specification
+• http://www.praetorian.com/blog/whats-up-with-whatsapps-security-facebook-sslvulnerabilities
+• https://www.ssllabs.com/ssltest/
+• https://whispersystems.org/blog/asynchronous-security/
+

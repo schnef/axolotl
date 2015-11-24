@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module textsecure</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module textsecure</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#decode_msg-2">decode_msg/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#encode_msg-1">encode_msg/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#encode_msg-2">encode_msg/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#enum_symbol_by_value-2">enum_symbol_by_value/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#enum_value_by_symbol-2">enum_value_by_symbol/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#fetch_enum_def-1">fetch_enum_def/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#fetch_msg_def-1">fetch_msg_def/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#fetch_rpc_def-2">fetch_rpc_def/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#find_enum_def-1">find_enum_def/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#find_msg_def-1">find_msg_def/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#find_rpc_def-2">find_rpc_def/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_enum_names-0">get_enum_names/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_msg_defs-0">get_msg_defs/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_msg_names-0">get_msg_names/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_package_name-0">get_package_name/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_rpc_names-1">get_rpc_names/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_service_def-1">get_service_def/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_service_names-0">get_service_names/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#gpb_version_as_list-0">gpb_version_as_list/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#gpb_version_as_string-0">gpb_version_as_string/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#merge_msgs-2">merge_msgs/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#verify_msg-1">verify_msg/1</a></td><td></td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="decode_msg-2">decode_msg/2</a></h3>
+<div class="spec">
+<p><tt>decode_msg(Bin, MsgName) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="encode_msg-1">encode_msg/1</a></h3>
+<div class="spec">
+<p><tt>encode_msg(Msg) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="encode_msg-2">encode_msg/2</a></h3>
+<div class="spec">
+<p><tt>encode_msg(Msg, Opts) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="enum_symbol_by_value-2">enum_symbol_by_value/2</a></h3>
+<div class="spec">
+<p><tt>enum_symbol_by_value(E, V) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="enum_value_by_symbol-2">enum_value_by_symbol/2</a></h3>
+<div class="spec">
+<p><tt>enum_value_by_symbol(E, V) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="fetch_enum_def-1">fetch_enum_def/1</a></h3>
+<div class="spec">
+<p><tt>fetch_enum_def(EnumName) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="fetch_msg_def-1">fetch_msg_def/1</a></h3>
+<div class="spec">
+<p><tt>fetch_msg_def(MsgName) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="fetch_rpc_def-2">fetch_rpc_def/2</a></h3>
+<div class="spec">
+<p><tt>fetch_rpc_def(ServiceName, RpcName) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="find_enum_def-1">find_enum_def/1</a></h3>
+<div class="spec">
+<p><tt>find_enum_def(X1) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="find_msg_def-1">find_msg_def/1</a></h3>
+<div class="spec">
+<p><tt>find_msg_def(X1) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="find_rpc_def-2">find_rpc_def/2</a></h3>
+<div class="spec">
+<p><tt>find_rpc_def(X1, X2) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_enum_names-0">get_enum_names/0</a></h3>
+<div class="spec">
+<p><tt>get_enum_names() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_msg_defs-0">get_msg_defs/0</a></h3>
+<div class="spec">
+<p><tt>get_msg_defs() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_msg_names-0">get_msg_names/0</a></h3>
+<div class="spec">
+<p><tt>get_msg_names() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_package_name-0">get_package_name/0</a></h3>
+<div class="spec">
+<p><tt>get_package_name() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_rpc_names-1">get_rpc_names/1</a></h3>
+<div class="spec">
+<p><tt>get_rpc_names(X1) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_service_def-1">get_service_def/1</a></h3>
+<div class="spec">
+<p><tt>get_service_def(X1) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_service_names-0">get_service_names/0</a></h3>
+<div class="spec">
+<p><tt>get_service_names() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="gpb_version_as_list-0">gpb_version_as_list/0</a></h3>
+<div class="spec">
+<p><tt>gpb_version_as_list() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="gpb_version_as_string-0">gpb_version_as_string/0</a></h3>
+<div class="spec">
+<p><tt>gpb_version_as_string() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="merge_msgs-2">merge_msgs/2</a></h3>
+<div class="spec">
+<p><tt>merge_msgs(Prev, New) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="verify_msg-1">verify_msg/1</a></h3>
+<div class="spec">
+<p><tt>verify_msg(Msg) -&gt; any()</tt></p>
+</div>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Nov 24 2015, 13:10:45.</i></p>
+</body>
+</html>
