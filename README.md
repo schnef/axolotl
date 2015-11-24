@@ -37,7 +37,7 @@ implementation of Google's Protocol Buffers compiler
 [Rebar](https://github.com/rebar/rebar). I make heavy use of
 [reloader](https://github.com/schnef/reloader) during program
 development for automatic module loading after recompiling source
-code. The dependencies on `curve25519', `hkdf', `gdb` and `reloader'
+code. The dependencies on `curve25519`, `hkdf`, `gdb` and `reloader`
 are automatically resolved during installation.
 
 The program was implemented and tested on ErlangOTP version 18 on a
@@ -51,8 +51,8 @@ to make rebar make use of it.
 Install ErlangOTP from either [Erlang.org](http://www.erlang.org/) or,
 as I mostly do, get it from [Erlang
 Solutions](https://www.erlang-solutions.com/resources/download.html). Get
-the `standard` distribution from Erlang Solutions if in doubt and not
-the 'enterprise` edition with rebar and other goodies.
+the 'standard' distribution from Erlang Solutions if in doubt and not
+the 'enterprise' edition with rebar and other goodies.
 
 Next install rebar version 2 from
 [Github](https://github.com/rebar/rebar) and follow the instructions
@@ -136,8 +136,8 @@ juliet>
 ```
 
 In terminal one, the peer named `juliet` is started which should
-contact remote peer `romeo` and in terminal 2 we start the peer `romeo'
-which should connect to `juliet'. The `INFO REPORT` says that the
+contact remote peer `romeo` and in terminal 2 we start the peer `romeo`
+which should connect to `juliet`. The `INFO REPORT` says that the
 database system Mnesia is restarted while building the initial
 database. The lines `Peer romeo@debian connected` and `juliet@debian
 connected` indicate that the two peers are connected and can
@@ -155,7 +155,7 @@ minute since pairing times out after one minute and you will end up
 with some weird error message.:
 
 NB: If something goes wrong, you can always start-out fresh by
-removing the databases `Mnesia.*'.
+removing the databases `Mnesia.*`.
 
 ```
 juliet> :c
@@ -183,7 +183,7 @@ romeo>  Msg sent     : {kem,<<51,8,162,215,18,18,32,251,207,31,200,92,138,199,16
                        234,211,115,131,64,128,142,25,33,99,35,153,41,37,151,
 		       ...
 		       211,143,94,139>>}
-romeo> 
+romeo>
 '''
 
 Juliet wants to know if it should trust romeo and the two peers will be paired.
@@ -197,9 +197,9 @@ juliet>
 
 Juliet starts out initializing the session by sending Romeo a Key
 Exchange Message (kem) which shows as `{kem,<<51,8,161,215,18,18,
-... 157,3>>}'.  Romeo receives this message as indicated by `"Recieved
+... 157,3>>}`.  Romeo receives this message as indicated by `"Recieved
 kem"` and returns a matching Key Exchange Message to Juliet:
-`{kem,<<51,8,162,215,18 ... 94,139>>}'. Juliet and Romeo now have all
+`{kem,<<51,8,162,215,18 ... 94,139>>}`. Juliet and Romeo now have all
 data available to get their side of the secure session up and
 running. NB: In a real-world situation there should be a "out of band"
 check on the public identity keys used by Juliet and Romeo.
@@ -266,7 +266,7 @@ romeo>
 
 ## Asynchronous connect
 
-Terminate juliet and romeo and remove the databases with `rm -r Mnesia.*'.
+Terminate juliet and romeo and remove the databases with `rm -r Mnesia.*`.
 In a third window start the prekey server.
 
 ```
