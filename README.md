@@ -277,7 +277,7 @@ In a third window start the prekey server.
          exited: stopped
            type: temporary
 pks>
-'''
+```
 
 Now start juliet and romeo again but don't use `:c` to connect. You
 will notice that pks finds there are no prekeys available yet for
@@ -289,14 +289,14 @@ romeo> I must generate!!
 romeo> I must generate!!
 romeo> Peer juliet@debian connected
 romeo>
-'''
+```
 
 ```
 juliet> Peer romeo@debian connected
 juliet> I must generate!!
 juliet> I must generate!!
 juliet>
-'''
+```
 
 ```
 pks> Peer romeo@debian uploads prekeys
@@ -308,7 +308,7 @@ pks> Review client {138906529,1747365075} prekeys
 pks> Peer juliet@debian uploads prekeys
 pks> Review client {138906529,1747365075} prekeys
 pks>
-'''
+```
 
 Now, send a message from one peer to the other without first
 connecting the two.
@@ -321,7 +321,7 @@ juliet> Make prekey msg from prekey bundle {1976208028,448741545,
 juliet>  Msg sent     : {pkmsg,<<51,40,161,151,158,66,
 	     	      ...
 juliet>
-'''
+```
 
 Now at Romeo's end, you first have to tell Romeo that Juliet is to be
 trusted, after which the message will be delivered.
@@ -331,7 +331,7 @@ romeo> Untrusted remote peer juliet@debian
 romeo> Do you trust that party? (y/n*) y
 romeo> Received msg: pkmsg: "Hello Romeo, are you there?"
 romeo>
-'''
+```
 
 A session now is established and messages can be passed between the
 two peers.
