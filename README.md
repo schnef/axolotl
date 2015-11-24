@@ -175,7 +175,7 @@ romeo> Do you trust that party (y/n*)?
 ```
 
 Type `y` and also in the other terminal confirm trusting the remote
-peer by typing `y'.
+peer by typing `y`.
 
 ```
 romeo> Pairing response with juliet@debian
