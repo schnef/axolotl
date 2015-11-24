@@ -37,7 +37,7 @@ implementation of Google's Protocol Buffers compiler
 [Rebar](https://github.com/rebar/rebar). I make heavy use of
 [reloader](https://github.com/schnef/reloader) during program
 development for automatic module loading after recompiling source
-code. The dependencies on `curve25519', `hkdf', `gdb' and `reloader'
+code. The dependencies on `curve25519', `hkdf', `gdb` and `reloader'
 are automatically resolved during installation.
 
 The program was implemented and tested on ErlangOTP version 18 on a
@@ -50,9 +50,9 @@ to make rebar make use of it.
 
 Install ErlangOTP from either [Erlang.org](http://www.erlang.org/) or,
 as I mostly do, get it from [Erlang
-Solutions](https://www.erlang-solutions.com/downloads/download-erlang-otp). Get
-the `standard' distribution from Erlang Solutions if in doubt and not
-the 'extended' with rebar and other extras.
+Solutions](https://www.erlang-solutions.com/resources/download.html). Get
+the `standard` distribution from Erlang Solutions if in doubt and not
+the 'enterprise` edition with rebar and other goodies.
 
 Next install rebar version 2 from
 [Github](https://github.com/rebar/rebar) and follow the instructions
@@ -97,9 +97,9 @@ Compiled src/textsecure.erl
 
 # Try it out
 
-The code comes with two scripts to run the code. The `peer' script is
-used by each party and the `pks' script is a very simple `prekey
-server' used by the peers to upload their prekeys to and to fetch
+The code comes with two scripts to run the code. The `peer` script is
+used by each party and the `pks` script is a very simple `prekey
+server` used by the peers to upload their prekeys to and to fetch
 prekey bundles from. Both scripts are unsuitable for real use but can
 be used to see how API calls are made.
 
@@ -135,12 +135,12 @@ juliet> Peer romeo@debian connected
 juliet>
 ```
 
-In terminal one, the peer named `juliet' is started which should
-contact remote peer `romeo' and in terminal 2 we start the peer `romeo'
-which should connect to `juliet'. The `INFO REPORT' says that the
+In terminal one, the peer named `juliet` is started which should
+contact remote peer `romeo` and in terminal 2 we start the peer `romeo'
+which should connect to `juliet'. The `INFO REPORT` says that the
 database system Mnesia is restarted while building the initial
-database. The lines `Peer romeo@debian connected' and `juliet@debian
-connected' indicate that the two peers are connected and can
+database. The lines `Peer romeo@debian connected` and `juliet@debian
+connected` indicate that the two peers are connected and can
 communicate with each other. At this point, communication is insecure.
 
 ## Synchronous connect
@@ -150,7 +150,7 @@ initiation. In the first case, the other peer can be offline or
 otherwise unavailable to get the secure connection established. First
 we will show how to get a session established when both peers are up
 and able to communicate. At one of the terminal windows type the
-command `:c' and make sure to follow the next few steps within one
+command `:c` and make sure to follow the next few steps within one
 minute since pairing times out after one minute and you will end up
 with some weird error message.:
 
@@ -174,7 +174,7 @@ romeo> Untrusted remote peer juliet@debian
 romeo> Do you trust that party (y/n*)?
 ```
 
-Type `y' and also in the other terminal confirm trusting the remote
+Type `y` and also in the other terminal confirm trusting the remote
 peer by typing `y'.
 
 ```
@@ -198,7 +198,7 @@ juliet>
 Juliet starts out initializing the session by sending Romeo a Key
 Exchange Message (kem) which shows as `{kem,<<51,8,161,215,18,18,
 ... 157,3>>}'.  Romeo receives this message as indicated by `"Recieved
-kem"' and returns a matching Key Exchange Message to Juliet:
+kem"` and returns a matching Key Exchange Message to Juliet:
 `{kem,<<51,8,162,215,18 ... 94,139>>}'. Juliet and Romeo now have all
 data available to get their side of the secure session up and
 running. NB: In a real-world situation there should be a "out of band"
@@ -219,7 +219,7 @@ romeo> Received msg: msg: "Hello Romeo!"
 romeo>
 ```
 
-Juliette's message gets encrypted and is sent as a `whipser' message to
+Juliette's message gets encrypted and is sent as a `whipser` message to
 Romeo.
 
 ## Re-establishing a session
@@ -279,7 +279,7 @@ In a third window start the prekey server.
 pks>
 '''
 
-Now start juliet and romeo again but don't use `:c' to connect. You
+Now start juliet and romeo again but don't use `:c` to connect. You
 will notice that pks finds there are no prekeys available yet for
 juliet and romeo and instructs both to upload a bunch of fresh
 prekeys.
