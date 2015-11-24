@@ -184,7 +184,7 @@ romeo>  Msg sent     : {kem,<<51,8,162,215,18,18,32,251,207,31,200,92,138,199,16
 		       ...
 		       211,143,94,139>>}
 romeo>
-'''
+```
 
 Juliet wants to know if it should trust romeo and the two peers will be paired.
 
@@ -193,7 +193,7 @@ juliet> Untrusted remote peer romeo@debian
 juliet> Do you trust that party? (y/n*) y
 juliet> Paired with romeo@debian
 juliet>
-'''
+```
 
 Juliet starts out initializing the session by sending Romeo a Key
 Exchange Message (kem) which shows as `{kem,<<51,8,161,215,18,18,
