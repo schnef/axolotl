@@ -336,3 +336,13 @@ romeo>
 A session now is established and messages can be passed between the
 two peers.
 
+# Remarks
+
+With `:o` you can start the Erlang observer from the scripts and `:d`
+will start the debugger.
+
+The Axolotl implementation lacks documentation and I would love to
+have a better understanding of the business rules for using the
+system. Also, much of the details on the use of the different protocol
+versions are a mystary to me. A system like this should be backed by a
+clear design!
