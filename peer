@@ -15,7 +15,7 @@
 
 main([My_id_str, Their_id_str]) ->
     My_id = list_to_atom(My_id_str),
-    Their_id = list_to_atom(Their_id_str ++ "@debian"),
+    Their_id = local_node(Their_id_str),
     
     %% Order is important!!: First register the short name based on our
     %% local id so Erlang will use the proper database. Next, start
@@ -129,7 +129,7 @@ send_loop(Their_id, Connected, Queue) ->
     end.
 
 make_prekey_msg(Their_id, Msg) ->
-    {io_loop, pks@debian} ! {fetch, self(), Their_id},
+    {io_loop, local_node(pks)} ! {fetch, self(), Their_id},
     receive
 	{prekey_bundle, Prekey_bundle_tuple} ->
 	    io:format("Make prekey msg from prekey bundle ~p and Msg ~p~n", [Prekey_bundle_tuple, Msg]),
@@ -215,9 +215,10 @@ recv_loop(Their_id) ->
     recv_loop(Their_id).
 
 pks_loop(My_id) ->
-    case net_kernel:connect_node(pks@debian) of
+    Pks = local_node(pks),
+    case net_kernel:connect_node(Pks) of
 	true ->
-	    {io_loop, pks@debian} ! {hello, self(), My_id};
+	    {io_loop, Pks} ! {hello, self(), My_id};
 	false ->
 	    ok;
 	ignored ->
@@ -227,14 +228,21 @@ pks_loop(My_id) ->
 	{prekeys, generate} ->
 	    io:format("I must generate!!~n"),
 	    Prekeys = utils:get_prekeys(10),
-	    {io_loop, pks@debian} ! {upload, My_id, Prekeys}
+	    {io_loop, Pks} ! {upload, My_id, Prekeys}
     after 
 	60000 ->
 	    ok
     end,
     pks_loop(My_id).
 
-    
+local_node(Nodename) ->
+    {ok, Hostname} = inet:gethostname(),
+    local_node(Nodename, Hostname).
+
+local_node(Nodename, Hostname) when is_atom(Nodename) ->
+    local_node(atom_to_list(Nodename), Hostname);
+local_node(Nodename, Hostname) when is_list(Nodename) ->
+    list_to_atom(Nodename ++ "@" ++ Hostname).
 
 usage() ->
     io:format("peer <my id> <their id>~n"),
