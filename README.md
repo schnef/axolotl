@@ -77,8 +77,8 @@ server` used by the peers to upload their prekeys to and to fetch
 prekey bundles from. Both scripts are unsuitable for real use but can
 be used to see how API calls are made.
 
-> The Erlang Port Mapper Daemon `epmd' must be running to run the
-> examples. Start `epmd' by issuing the command `epmd -daemon'.
+> The Erlang Port Mapper Daemon `epmd` must be running to run the
+> examples. Start `epmd` by issuing the command `epmd -daemon`.
 >
 > Depending on your system configuration and Erlang version used, you
 > may or may not get log messages.
