@@ -1,4 +1,0 @@
-%% encoding: UTF-8
-{application,axolotl}.
-{modules,[axolotl,axolotl_app,axolotl_sup,identities,kems,prekeys,session,
-          textsecure,utils]}.

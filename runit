@@ -1,4 +1,0 @@
-#!/bin/sh
-
-erl -sname axolotl -pa ../axolotl/ebin -pa deps/*/ebin -s reloader 
-
