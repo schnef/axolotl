@@ -8,7 +8,7 @@ V2](https://github.com/WhisperSystems/Signal-Android/wiki/ProtocolV2).
 
 In contrast to the other implementations I know, you don't have to
 build your own storage back-end. Except for a recent Erlang/OTP,
-rebar, git and C compiler, there are no dependencies you will have to
+rebar3, git and C compiler, there are no dependencies you will have to
 resolve to use the software. The dependencies are trivial to install.
 
 Currently there are several implementations of the Axolotl protocol as
@@ -34,17 +34,14 @@ curve25519 signing / verifying and HMAC-based Extract-and-Expand Key
 Derivation Function respectively. You will need the Erlang
 implementation of Google's Protocol Buffers compiler
 [gpb](https://github.com/tomas-abrahamsson/gpb), a C compiler and
-[Rebar](https://github.com/rebar/rebar). I make heavy use of
-[reloader](https://github.com/schnef/reloader) during program
-development for automatic module loading after recompiling source
-code. The dependencies on `curve25519`, `hkdf`, `gdb` and `reloader`
-are automatically resolved during installation.
+[Rebar](https://github.com/rebar/rebar). The dependencies on
+`curve25519`, `hkdf`, `gdb` and `reloader` are automatically resolved
+during installation.
 
 The program was implemented and tested on ErlangOTP version 18 on a
-Debian Jessie AMD64 system but should run on R16 or even older
-Erlang/OTP versions. Installing the project on OS/X, Windows or some
-other OS should be not to hard if you have a C compiler and know how
-to make rebar make use of it.
+Debian Jessie AMD64 system and tested on 22. Installing the project on
+OS/X, Windows or some other OS should be not to hard if you have a C
+compiler and know how to make rebar make use of it.
 
 # Installation
 
@@ -54,14 +51,10 @@ Solutions](https://www.erlang-solutions.com/resources/download.html). Get
 the 'standard' distribution from Erlang Solutions if in doubt and not
 the 'enterprise' edition with rebar and other goodies.
 
-Next install rebar version 2 from
-[Github](https://github.com/rebar/rebar) and follow the instructions
-from the site to install . Mostly, I put the rebar executable
-somewhere in my PATH, such as $(HOME)/bin.
-
-You will also need [git](https://www.git-scm.com/) for your system to
-get a copy of the sources and allow for automatic resolving
-dependencies.
+Next install 
+[rebar3](https://www.rebar3.org/) and follow the instructions
+from the site to install. Mostly, I put the rebar3 executable
+somewhere in my PATH, e.g. $(HOME)/bin.
 
 To compile the C code for the curve25519 implementation, you will need
 a C compiler such as gcc, MingW etc.
@@ -72,27 +65,8 @@ a C compiler such as gcc, MingW etc.
 
 ~$ cd axolotl
 
-~/axolotl$ rebar get-deps
-==> gpb (get-deps)
-==> curve25519 (get-deps)
-==> hkdf (get-deps)
-==> reloader (get-deps)
-==> axolotl (get-deps)
-
-/axolotl~$ rebar compile doc
-==> gpb (compile)
-Compiled src/gpb_scan.xrl
-Compiled src/gpb_parse.yrl
-Compiled src/gpb_codegen.erl
+~/axolotl$ rebar3 compile
 ...
-...
-Compiled src/session.erl
-Compiled src/textsecure.erl
-==> gpb (doc)
-==> curve25519 (doc)
-==> hkdf (doc)
-==> reloader (doc)
-==> axolotl (doc)
 ```
 
 # Try it out
@@ -102,6 +76,12 @@ used by each party and the `pks` script is a very simple `prekey
 server` used by the peers to upload their prekeys to and to fetch
 prekey bundles from. Both scripts are unsuitable for real use but can
 be used to see how API calls are made.
+
+> The Erlang Port Mapper Daemon `epmd' must be running to run the
+> examples. Start `epmd' by issuing the command `epmd -daemon'.
+>
+> Depending on your system configuration and Erlang version used, you
+> may or may not get log messages.
 
 We will start by starting two peers and building a secure session
 between the two. Open two terminal windows, one for each peer, and
@@ -128,7 +108,7 @@ romeo> Peer juliet@debian connected
 romeo> 
 ```
 
-In terminal one you will notice that it will display:
+In terminal one you will notice that it will display (the host name will be different):
 
 ```
 juliet> Peer romeo@debian connected
@@ -313,6 +293,11 @@ pks>
 Now, send a message from one peer to the other without first
 connecting the two.
 
+> You may notice a crash report which is precisely according to
+> plan. The sending party finds out that there is no session running
+> for the remote peer, which results in a crash, and will start a new
+> session.
+
 ```
 juliet> Hello Romeo, are you there?
 juliet> Get prekey bundle and retry sending
@@ -341,8 +326,6 @@ two peers.
 With `:o` you can start the Erlang observer from the scripts and `:d`
 will start the debugger.
 
-The Axolotl implementation lacks documentation and I would love to
-have a better understanding of the business rules for using the
-system. Also, much of the details on the use of the different protocol
-versions are a mystary to me. A system like this should be backed by a
-clear design!
+Axolotl is superseded by [Signal](https://signal.org/docs/), which is
+a lot better documented. Maybe, one day, I will implement Signal just
+for fun.

@@ -1,6 +1,5 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
-%%! -smp enable
 
 %% This is not code, this is a junkyard!!
 

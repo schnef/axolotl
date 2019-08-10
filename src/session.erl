@@ -514,22 +514,31 @@ msg_cipher_key_and_iv(2, CK, N) ->
 msg_cipher_key_and_iv(3, CK, _N) ->
     %% Version 3
     MK = crypto:hmac(sha256, CK, <<1>>),
-    <<Cipher_key:32/binary, 
+    %% <<Cipher_key:32/binary, 
+    %%   Mac_key:32/binary,
+    %%   Ivec:16/binary>> = derive_secrets(3, MK, <<"WhisperMessageKeys">>, 80),
+
+    %% TODO: Check compatibility with the official protocol. The
+    %% derived Cipher_key was 32 bytes, but the crypto lib only
+    %% accepts 16 bytes for the aes_128_cbc cypher, which is
+    %% correct. One could use aes_256_cbc with a 32 bytes long key,
+    %% but the original implementation did explicitly use 128.
+    <<Cipher_key:16/binary, 
       Mac_key:32/binary,
-      Ivec:16/binary>> = derive_secrets(3, MK, <<"WhisperMessageKeys">>, 80),
+      Ivec:16/binary>> = derive_secrets(3, MK, <<"WhisperMessageKeys">>, 64),
     {Cipher_key, Ivec, Mac_key}.
 
 %% @private
 encrypt_msg(2, Plain_msg, CKs, Ns) ->
     {Cipher_key, Ivec, Mac_key} = msg_cipher_key_and_iv(2, CKs, Ns),
-    Stream_state = crypto:stream_init(aes_ctr, Cipher_key, Ivec),
+    Stream_state = crypto:stream_init(aes_128_ctr, Cipher_key, Ivec),
     {_New_stream_state, Cipher_msg} = crypto:stream_encrypt(Stream_state, Plain_msg),
     {Cipher_msg, Mac_key};
 encrypt_msg(Version, Plain_msg, CKs, Ns) ->
     Block_size = 16,  % 128 bits
     Padded_msg = pad(Plain_msg, Block_size),
     {Cipher_key, Ivec, Mac_key} = msg_cipher_key_and_iv(Version, CKs, Ns),
-    Cipher_msg = crypto:block_encrypt(aes_cbc128, Cipher_key, Ivec, Padded_msg),
+    Cipher_msg = crypto:crypto_one_time(aes_128_cbc, Cipher_key, Ivec, Padded_msg, true),
     {Cipher_msg, Mac_key}.
 
 %% @private
@@ -557,7 +566,7 @@ decrypt_msg(2, Cipher_msg, CKr, Nr) ->
     {Plain_msg, Mac_key};
 decrypt_msg(Version, Cipher_msg, CKr, Nr) ->
     {Cipher_key, Ivec, Mac_key} = msg_cipher_key_and_iv(Version, CKr, Nr),
-    Plain_msg = crypto:block_decrypt(aes_cbc128, Cipher_key, Ivec, Cipher_msg),
+    Plain_msg = crypto:crypto_one_time(aes_128_cbc, Cipher_key, Ivec, Cipher_msg, false),
     {unpad(Plain_msg), Mac_key}.
 
 %% @private

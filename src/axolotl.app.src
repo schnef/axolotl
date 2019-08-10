@@ -1,11 +1,12 @@
 {application, axolotl,
  [
-  {description, ""},
+  {description, "Axolotl ratcheting forward secrecy protocol"},
   {vsn, "1"},
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+		  mnesia
                  ]},
   {mod, { axolotl_app, []}},
   {env, []}

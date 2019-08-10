@@ -1,0 +1,8 @@
+[{<<"curve25519">>,
+  {git,"git://github.com/schnef/curve25519.git",
+       {ref,"a9267ca3baa1266c62c3d971ae620ff095a5fc66"}},
+  0},
+ {<<"hkdf">>,
+  {git,"git://github.com/schnef/hkdf.git",
+       {ref,"228da8b75e6127f53eafa183f69e0cf07d8c5676"}},
+  0}].

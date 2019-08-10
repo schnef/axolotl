@@ -1,6 +1,6 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
-%%! -smp enable -pz ebin -pz deps/curve25519/ebin -pz deps/gpb/ebin -pz deps/hkdf/ebin
+%%! -pz _build/default/lib/hkdf/ebin -pz _build/default/lib/curve25519/ebin -pz _build/default/lib/axolotl/ebin
 
 %% This is not code, this is a junkyard!!
 
@@ -23,7 +23,7 @@ main([My_id_str, Their_id_str]) ->
     %% receiving and sending data, after which the process monitoring
     %% the connection is started.
     net_kernel:start([My_id, shortnames]), 
-    application:start(axolotl),
+    {ok, _} = application:ensure_all_started(axolotl),
 
     Pid_recv = spawn(?MODULE, recv_loop, [Their_id]),
     register(recv_loop, Pid_recv),
